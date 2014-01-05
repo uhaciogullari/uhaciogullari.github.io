@@ -1,8 +1,7 @@
 ---
 layout: post
-title: "Strategy pattern with Dependency Injection"
-date: 2013-12-17 00:09:27 +0200
-published: false
+title: "Strategy Pattern with Dependency Injection"
+date: 2014-01-05 23:08:22 +0200
 comments: true
 categories: [Design Patterns, Dependency Injection, C#]
 ---
