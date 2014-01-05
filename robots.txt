@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://uhaciogullari.github.io/sitemap.xml 
