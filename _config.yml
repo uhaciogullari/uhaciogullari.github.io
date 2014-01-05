@@ -2,10 +2,10 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
-author: Your Name
+url: http://uhaciogullari.github.io
+title: Ufuk Hacıoğulları
+subtitle: it's an implementation detail
+author: Ufuk Hacıoğulları
 simple_search: http://google.com/search
 description:
 
@@ -90,11 +90,11 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: uhaciogullariblog
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-36762110-2
 
 # Facebook Like
 facebook_like: false
