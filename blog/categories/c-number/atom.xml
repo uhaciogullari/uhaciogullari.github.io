@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: C# | Ufuk Hacıoğulları]]></title>
+  <link href="http://uhaciogullari.github.io/blog/categories/c-number/atom.xml" rel="self"/>
+  <link href="http://uhaciogullari.github.io/"/>
+  <updated>2014-01-05T23:05:04+02:00</updated>
+  <id>http://uhaciogullari.github.io/</id>
+  <author>
+    <name><![CDATA[Ufuk Hacıoğulları]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Strategy Pattern with Dependency Injection]]></title>
+    <link href="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/"/>
+    <updated>2014-01-05T22:57:54+02:00</updated>
+    <id>http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection</id>
+    <content type="html"><![CDATA[<p><a href="http://sourcemaking.com/design_patterns/strategy">Strategy pattern</a> is one of the most useful design patterns in OOP. It lets you select an algoritm&rsquo;s implementation at runtime. However most of the examples you will find online won&rsquo;t make sense if you are using dependency injection. Here&rsquo;s one of them:</p>
+
+<p>```
+public interface IPaymentMethod
+{</p>
+
+<pre><code>PaymentResult Process(PaymentRequest request);
+</code></pre>
+
+<p>}</p>
+
+<p>public class CashOnDelivery : IPaymentMethod
+{</p>
+
+<pre><code>public PaymentResult Process(PaymentRequest request)
+{
+    Console.WriteLine("Pay with cash on delivery");
+    return null;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>public class CreditCardPayment : IPaymentMethod
+{</p>
+
+<pre><code>public PaymentResult Process(PaymentRequest request)
+{
+    Console.WriteLine("Pay with credit card");
+    return null;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>public interface IPaymentService
+{</p>
+
+<pre><code>PaymentResult Pay(string paymentMethodName, PaymentRequest request);
+</code></pre>
+
+<p>}</p>
+
+<p>public class PaymentService : IPaymentService
+{</p>
+
+<pre><code>public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
+{
+    IPaymentMethod paymentMethod = null;
+
+    if (paymentMethodName == "Cash")
+    {
+        paymentMethod = new CashOnDelivery();
+    }
+    else if (paymentMethodName == "CreditCard")
+    {
+        paymentMethod = new CreditCardPayment();
+    }
+    else
+    {
+        //default implementation
+    }
+
+    return paymentMethod.Process(request);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>This example has a few problems:</p>
+
+<ul>
+<li>PaymentService class is tightly coupled to the implementations of IPaymentMethod.</li>
+<li>We are using new keyword to create instances instead of letting them be resolved by the DI container. It will get worse if we don&rsquo;t have default constructors for these types. <a href="http://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/">Service Locator</a> is out of the question!</li>
+<li><a href="http://en.wikipedia.org/wiki/Open/closed_principle">Open/closed principle</a> will be clearly violated once we have to create new payment methods.</li>
+</ul>
+
+
+<p>We have to find a way to resolve the implementations by DI container. We can start by adding an identifier to the strategy interface to move the selection outside of the client code.</p>
+
+<p>```
+public interface IPaymentMethod
+{</p>
+
+<pre><code>string Name { get; }
+PaymentResult Process(PaymentRequest request);
+</code></pre>
+
+<p>}</p>
+
+<p>public class CashOnDelivery : IPaymentMethod
+{</p>
+
+<pre><code>public CashOnDelivery()
+{
+    Name = "Cash";
+}
+
+public string Name { get; private set; }
+
+public PaymentResult Process(PaymentRequest request)
+{
+    Console.WriteLine("Pay with cash on delivery");
+    return null;
+}
+</code></pre>
+
+<p>}</p>
+
+<p>public class CreditCardPayment : IPaymentMethod
+{</p>
+
+<pre><code>public CreditCardPayment()
+{
+    Name = "CreditCard";
+}
+
+public string Name { get; private set; }
+
+public PaymentResult Process(PaymentRequest request)
+{
+    Console.WriteLine("Pay with credit card");
+    return null;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>We added a simple name property to the strategy interface. It will make our selection code much simpler. You can use a method here if your selection logic is more complex.</p>
+
+<p>Selecting a strategy is really easy now but we can make use of an another abstraction to keep the client code simpler.</p>
+
+<p>```
+public interface IPaymentMethodResolver
+{</p>
+
+<pre><code>IPaymentMethod Resolve(string name);
+</code></pre>
+
+<p>}</p>
+
+<p>public class PaymentMethodResolver : IPaymentMethodResolver
+{</p>
+
+<pre><code>private readonly IEnumerable&lt;IPaymentMethod&gt; _paymentMethods;
+
+public PaymentMethodResolver(IEnumerable&lt;IPaymentMethod&gt; paymentMethods)
+{
+    _paymentMethods = paymentMethods;
+}
+
+public IPaymentMethod Resolve(string name)
+{
+    IPaymentMethod paymentMethod = _paymentMethods.FirstOrDefault(item =&gt; item.Name == name);
+    if (paymentMethod == null)
+    {
+        throw new ArgumentException("Payment method not found", "name");
+    }
+    return paymentMethod;
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>Resolve method is pretty simple and we get the payment method implementations by constructor injection. The only thing left to do is registration. Any decent DI container will let you inject multiple implementations of an interface as a collection. Here&rsquo;s how you can do it with <a href="http://docs.castleproject.org/Windsor.MainPage.ashx">Castle Windsor</a>.</p>
+
+<p>```
+container.Register(</p>
+
+<pre><code>Component.For&lt;IPaymentService&gt;().ImplementedBy&lt;PaymentService&gt;(),
+Component.For&lt;IPaymentMethodResolver&gt;().ImplementedBy&lt;PaymentMethodResolver&gt;(),
+Classes.FromThisAssembly().IncludeNonPublicTypes().BasedOn&lt;IPaymentMethod&gt;()
+       .WithService.FromInterface()
+);
+</code></pre>
+
+<p>CollectionResolver collectionResolver = new CollectionResolver(container.Kernel);
+container.Kernel.Resolver.AddSubResolver(collectionResolver);
+```</p>
+
+<p>It&rsquo;s done. Now the PaymentService looks like this:</p>
+
+<p>```
+public class PaymentService : IPaymentService
+{</p>
+
+<pre><code>private readonly IPaymentMethodResolver _paymentMethodResolver;
+
+public PaymentService(IPaymentMethodResolver paymentMethodResolver)
+{
+    _paymentMethodResolver = paymentMethodResolver;
+}
+
+public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
+{
+   IPaymentMethod paymentMethod = _paymentMethodResolver.Resolve(paymentMethodName);
+    return paymentMethod.Process(request);
+}
+</code></pre>
+
+<p>}
+```</p>
+]]></content>
+  </entry>
+  
+</feed>
