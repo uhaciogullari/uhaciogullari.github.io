@@ -8,7 +8,7 @@ categories: [Design Patterns, Dependency Injection, C#]
 
 [Strategy pattern][1] is one of the most useful design patterns in OOP. It lets you select an algoritm's implementation at runtime. However most of the examples you will find online won't make sense if you are using dependency injection. Here's one of them:
 
-```
+```csharp
 public interface IPaymentMethod
 {
     PaymentResult Process(PaymentRequest request);
@@ -69,7 +69,7 @@ This example has a few problems:
 
 We have to find a way to resolve the implementations by DI container. We can start by adding an identifier to the strategy interface to move the selection outside of the client code.
 
-```
+```csharp
 public interface IPaymentMethod
 {
     string Name { get; }
@@ -113,7 +113,7 @@ We added a simple name property to the strategy interface. It will make our sele
 
 Selecting a strategy is really easy now but we can make use of an another abstraction to keep the client code simpler. 
 
-```
+```csharp
 public interface IPaymentMethodResolver
 {
     IPaymentMethod Resolve(string name);
@@ -133,7 +133,7 @@ public class PaymentMethodResolver : IPaymentMethodResolver
         IPaymentMethod paymentMethod = _paymentMethods.FirstOrDefault(item => item.Name == name);
         if (paymentMethod == null)
         {
-            throw new ArgumentException("Payment method not found", "name");
+            throw new ArgumentException("Payment method not found", name);
         }
         return paymentMethod;
     }
@@ -142,7 +142,7 @@ public class PaymentMethodResolver : IPaymentMethodResolver
 
 Resolve method is pretty simple and we get the payment method implementations by constructor injection. The only thing left to do is registration. Any decent DI container will let you inject multiple implementations of an interface as a collection. Here's how you can do it with [Castle Windsor][4].
 
-```
+```csharp
 container.Register(
     Component.For<IPaymentService>().ImplementedBy<PaymentService>(),
     Component.For<IPaymentMethodResolver>().ImplementedBy<PaymentMethodResolver>(),
@@ -156,7 +156,7 @@ container.Kernel.Resolver.AddSubResolver(collectionResolver);
 
 It's done. Now the PaymentService looks like this:
 
-```
+```csharp
 public class PaymentService : IPaymentService
 {
     private readonly IPaymentMethodResolver _paymentMethodResolver;
