@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Strategy Pattern with Dependency Injection - Ufuk Hacıoğulları</title>
+  <meta name="author" content="Ufuk Hacıoğulları">
+
+  
+  <meta name="description" content="Strategy pattern is one of the most useful design patterns in OOP. It lets you select an algoritm&rsquo;s implementation at runtime. However most of &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Ufuk Hacıoğulları" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Fjalla+One' rel='stylesheet' type='text/css'>
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36762110-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   class="collapse-sidebar sidebar-footer" >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Ufuk Hacıoğulları</a></h1>
+  
+    <h2>it's an implementation detail</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:uhaciogullari.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Strategy Pattern With Dependency Injection</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-05T22:57:54+02:00" pubdate data-updated="true">Jan 5<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="http://sourcemaking.com/design_patterns/strategy">Strategy pattern</a> is one of the most useful design patterns in OOP. It lets you select an algoritm&rsquo;s implementation at runtime. However most of the examples you will find online won&rsquo;t make sense if you are using dependency injection. Here&rsquo;s one of them:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public interface IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    PaymentResult Process(PaymentRequest request);
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class CashOnDelivery : IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    public PaymentResult Process(PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>        Console.WriteLine("Pay with cash on delivery");
+</span><span class='line'>        return null;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class CreditCardPayment : IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    public PaymentResult Process(PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>        Console.WriteLine("Pay with credit card");
+</span><span class='line'>        return null;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public interface IPaymentService
+</span><span class='line'>{
+</span><span class='line'>    PaymentResult Pay(string paymentMethodName, PaymentRequest request);
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class PaymentService : IPaymentService
+</span><span class='line'>{
+</span><span class='line'>    public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>        IPaymentMethod paymentMethod = null;
+</span><span class='line'>
+</span><span class='line'>        if (paymentMethodName == "Cash")
+</span><span class='line'>        {
+</span><span class='line'>            paymentMethod = new CashOnDelivery();
+</span><span class='line'>        }
+</span><span class='line'>        else if (paymentMethodName == "CreditCard")
+</span><span class='line'>        {
+</span><span class='line'>            paymentMethod = new CreditCardPayment();
+</span><span class='line'>        }
+</span><span class='line'>        else
+</span><span class='line'>        {
+</span><span class='line'>            //default implementation
+</span><span class='line'>        }
+</span><span class='line'>
+</span><span class='line'>        return paymentMethod.Process(request);
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This example has a few problems:</p>
+
+<ul>
+<li>PaymentService class is tightly coupled to the implementations of IPaymentMethod.</li>
+<li>We are using new keyword to create instances instead of letting them be resolved by the DI container. It will get worse if we don&rsquo;t have default constructors for these types. <a href="http://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/">Service Locator</a> is out of the question!</li>
+<li><a href="http://en.wikipedia.org/wiki/Open/closed_principle">Open/closed principle</a> will be clearly violated once we have to create new payment methods.</li>
+</ul>
+
+
+<p>We have to find a way to resolve the implementations by DI container. We can start by adding an identifier to the strategy interface to move the selection outside of the client code.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public interface IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    string Name { get; }
+</span><span class='line'>    PaymentResult Process(PaymentRequest request);
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class CashOnDelivery : IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    public CashOnDelivery()
+</span><span class='line'>    {
+</span><span class='line'>        Name = "Cash";
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    public string Name { get; private set; }
+</span><span class='line'>
+</span><span class='line'>    public PaymentResult Process(PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>        Console.WriteLine("Pay with cash on delivery");
+</span><span class='line'>        return null;
+</span><span class='line'>    }
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class CreditCardPayment : IPaymentMethod
+</span><span class='line'>{
+</span><span class='line'>    public CreditCardPayment()
+</span><span class='line'>    {
+</span><span class='line'>        Name = "CreditCard";
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    public string Name { get; private set; }
+</span><span class='line'>
+</span><span class='line'>    public PaymentResult Process(PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>        Console.WriteLine("Pay with credit card");
+</span><span class='line'>        return null;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We added a simple name property to the strategy interface. It will make our selection code much simpler. You can use a method here if your selection logic is more complex.</p>
+
+<p>Selecting a strategy is really easy now but we can make use of an another abstraction to keep the client code simpler.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public interface IPaymentMethodResolver
+</span><span class='line'>{
+</span><span class='line'>    IPaymentMethod Resolve(string name);
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>public class PaymentMethodResolver : IPaymentMethodResolver
+</span><span class='line'>{
+</span><span class='line'>    private readonly IEnumerable&lt;IPaymentMethod&gt; _paymentMethods;
+</span><span class='line'>
+</span><span class='line'>    public PaymentMethodResolver(IEnumerable&lt;IPaymentMethod&gt; paymentMethods)
+</span><span class='line'>    {
+</span><span class='line'>        _paymentMethods = paymentMethods;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    public IPaymentMethod Resolve(string name)
+</span><span class='line'>    {
+</span><span class='line'>        IPaymentMethod paymentMethod = _paymentMethods.FirstOrDefault(item =&gt; item.Name == name);
+</span><span class='line'>        if (paymentMethod == null)
+</span><span class='line'>        {
+</span><span class='line'>            throw new ArgumentException("Payment method not found", "name");
+</span><span class='line'>        }
+</span><span class='line'>        return paymentMethod;
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Resolve method is pretty simple and we get the payment method implementations by constructor injection. The only thing left to do is registration. Any decent DI container will let you inject multiple implementations of an interface as a collection. Here&rsquo;s how you can do it with <a href="http://docs.castleproject.org/Windsor.MainPage.ashx">Castle Windsor</a>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>container.Register(
+</span><span class='line'>    Component.For&lt;IPaymentService&gt;().ImplementedBy&lt;PaymentService&gt;(),
+</span><span class='line'>    Component.For&lt;IPaymentMethodResolver&gt;().ImplementedBy&lt;PaymentMethodResolver&gt;(),
+</span><span class='line'>    Classes.FromThisAssembly().IncludeNonPublicTypes().BasedOn&lt;IPaymentMethod&gt;()
+</span><span class='line'>           .WithService.FromInterface()
+</span><span class='line'>    );
+</span><span class='line'>
+</span><span class='line'>CollectionResolver collectionResolver = new CollectionResolver(container.Kernel);
+</span><span class='line'>container.Kernel.Resolver.AddSubResolver(collectionResolver);</span></code></pre></td></tr></table></div></figure>
+
+
+<p>It&rsquo;s done. Now the PaymentService looks like this:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>public class PaymentService : IPaymentService
+</span><span class='line'>{
+</span><span class='line'>    private readonly IPaymentMethodResolver _paymentMethodResolver;
+</span><span class='line'>
+</span><span class='line'>    public PaymentService(IPaymentMethodResolver paymentMethodResolver)
+</span><span class='line'>    {
+</span><span class='line'>        _paymentMethodResolver = paymentMethodResolver;
+</span><span class='line'>    }
+</span><span class='line'>
+</span><span class='line'>    public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
+</span><span class='line'>    {
+</span><span class='line'>       IPaymentMethod paymentMethod = _paymentMethodResolver.Resolve(paymentMethodName);
+</span><span class='line'>        return paymentMethod.Process(request);
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Ufuk Hacıoğulları</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-05T22:57:54+02:00" pubdate data-updated="true">Jan 5<span>th</span>, 2014</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-number/'>C#</a>, <a class='category' href='/blog/categories/dependency-injection/'>Dependency Injection</a>, <a class='category' href='/blog/categories/design-patterns/'>Design Patterns</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/" data-via="" data-counturl="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/01/05/strategy-pattern-with-dependency-injection/">Strategy Pattern with Dependency Injection</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Ufuk Hacıoğulları -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> | Themed with <a href="https://github.com/lucaslew/whitespace">Whitespace</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'uhaciogullariblog';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/';
+        var disqus_url = 'http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
