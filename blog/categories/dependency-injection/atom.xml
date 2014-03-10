@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Dependency Injection | Ufuk Hacıoğulları]]></title>
   <link href="http://uhaciogullari.github.io/blog/categories/dependency-injection/atom.xml" rel="self"/>
   <link href="http://uhaciogullari.github.io/"/>
-  <updated>2014-01-05T23:05:04+02:00</updated>
+  <updated>2014-03-09T17:15:37-07:00</updated>
   <id>http://uhaciogullari.github.io/</id>
   <author>
     <name><![CDATA[Ufuk Hacıoğulları]]></name>
@@ -16,11 +16,11 @@
   <entry>
     <title type="html"><![CDATA[Strategy Pattern with Dependency Injection]]></title>
     <link href="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/"/>
-    <updated>2014-01-05T22:57:54+02:00</updated>
+    <updated>2014-01-05T13:08:22-08:00</updated>
     <id>http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection</id>
     <content type="html"><![CDATA[<p><a href="http://sourcemaking.com/design_patterns/strategy">Strategy pattern</a> is one of the most useful design patterns in OOP. It lets you select an algoritm&rsquo;s implementation at runtime. However most of the examples you will find online won&rsquo;t make sense if you are using dependency injection. Here&rsquo;s one of them:</p>
 
-<p>```
+<p>```csharp
 public interface IPaymentMethod
 {</p>
 
@@ -99,7 +99,7 @@ public interface IPaymentMethod
 
 <p>We have to find a way to resolve the implementations by DI container. We can start by adding an identifier to the strategy interface to move the selection outside of the client code.</p>
 
-<p>```
+<p>```csharp
 public interface IPaymentMethod
 {</p>
 
@@ -152,7 +152,7 @@ public PaymentResult Process(PaymentRequest request)
 
 <p>Selecting a strategy is really easy now but we can make use of an another abstraction to keep the client code simpler.</p>
 
-<p>```
+<p>```csharp
 public interface IPaymentMethodResolver
 {</p>
 
@@ -176,7 +176,7 @@ public IPaymentMethod Resolve(string name)
     IPaymentMethod paymentMethod = _paymentMethods.FirstOrDefault(item =&gt; item.Name == name);
     if (paymentMethod == null)
     {
-        throw new ArgumentException("Payment method not found", "name");
+        throw new ArgumentException("Payment method not found", name);
     }
     return paymentMethod;
 }
@@ -187,7 +187,7 @@ public IPaymentMethod Resolve(string name)
 
 <p>Resolve method is pretty simple and we get the payment method implementations by constructor injection. The only thing left to do is registration. Any decent DI container will let you inject multiple implementations of an interface as a collection. Here&rsquo;s how you can do it with <a href="http://docs.castleproject.org/Windsor.MainPage.ashx">Castle Windsor</a>.</p>
 
-<p>```
+<p>```csharp
 container.Register(</p>
 
 <pre><code>Component.For&lt;IPaymentService&gt;().ImplementedBy&lt;PaymentService&gt;(),
@@ -203,7 +203,7 @@ container.Kernel.Resolver.AddSubResolver(collectionResolver);
 
 <p>It&rsquo;s done. Now the PaymentService looks like this:</p>
 
-<p>```
+<p>```csharp
 public class PaymentService : IPaymentService
 {</p>
 
