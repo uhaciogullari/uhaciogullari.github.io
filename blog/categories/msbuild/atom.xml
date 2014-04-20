@@ -4,7 +4,7 @@
   <title><![CDATA[Category: MSBuild | Ufuk Hacıoğulları]]></title>
   <link href="http://uhaciogullari.github.io/blog/categories/msbuild/atom.xml" rel="self"/>
   <link href="http://uhaciogullari.github.io/"/>
-  <updated>2014-04-20T16:03:01+03:00</updated>
+  <updated>2014-04-20T16:09:53+03:00</updated>
   <id>http://uhaciogullari.github.io/</id>
   <author>
     <name><![CDATA[Ufuk Hacıoğulları]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Integrating Octopus Deploy with Jenkins]]></title>
-    <link href="http://uhaciogullari.github.io/blog/2014/04/20/integrating-octopus-deploy-with-jenkins/"/>
+    <title type="html"><![CDATA[Integrating Jenkins with Octopus Deploy]]></title>
+    <link href="http://uhaciogullari.github.io/blog/2014/04/20/integrating-jenkins-with-octopus-deploy/"/>
     <updated>2014-04-20T17:20:56+03:00</updated>
-    <id>http://uhaciogullari.github.io/blog/2014/04/20/integrating-octopus-deploy-with-jenkins</id>
+    <id>http://uhaciogullari.github.io/blog/2014/04/20/integrating-jenkins-with-octopus-deploy</id>
     <content type="html"><![CDATA[<p>Jenkins can easily produce deployable NuGet packages for Octopus Deploy. You should start by adding <a href="http://www.nuget.org/packages/OctoPack">OctoPack</a> package to the project you want to deploy.</p>
 
 <pre><code>Install-Package OctoPack
