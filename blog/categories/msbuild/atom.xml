@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: MSBuild | Ufuk Hacıoğulları]]></title>
+  <link href="http://uhaciogullari.github.io/blog/categories/msbuild/atom.xml" rel="self"/>
+  <link href="http://uhaciogullari.github.io/"/>
+  <updated>2014-04-20T16:03:01+03:00</updated>
+  <id>http://uhaciogullari.github.io/</id>
+  <author>
+    <name><![CDATA[Ufuk Hacıoğulları]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Integrating Octopus Deploy with Jenkins]]></title>
+    <link href="http://uhaciogullari.github.io/blog/2014/04/20/integrating-octopus-deploy-with-jenkins/"/>
+    <updated>2014-04-20T17:20:56+03:00</updated>
+    <id>http://uhaciogullari.github.io/blog/2014/04/20/integrating-octopus-deploy-with-jenkins</id>
+    <content type="html"><![CDATA[<p>Jenkins can easily produce deployable NuGet packages for Octopus Deploy. You should start by adding <a href="http://www.nuget.org/packages/OctoPack">OctoPack</a> package to the project you want to deploy.</p>
+
+<pre><code>Install-Package OctoPack
+</code></pre>
+
+<p>I&rsquo;m getting MSBuild to generate the assembly versions so I don&rsquo;t have to manually increment them. OctoPack will use the same version for creating the deployable package(unless you use a nuspec file or specify it with a command line parameter). We will edit AssemblyInfo.cs to make this work.</p>
+
+<p><code>csharp
+[assembly: AssemblyVersion("1.0.*")]
+//[assembly: AssemblyFileVersion("1.0.0.0")]
+</code></p>
+
+<p>We commented out AssemblyFileVersionAttribute becase MSBuild can&rsquo;t generate it for us. This way it will use the same version for the file version too.</p>
+
+<p>Next I&rsquo;ll create a Jenkins project. Setup your source control and <a href="https://wiki.jenkins-ci.org/display/JENKINS/MSBuild+Plugin">MSBuild plugin</a>. I will use <a href="https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin">Git plugin</a> for this demo. Source code is on a <a href="https://github.com/uhaciogullari/SimpleMvcSitemap">public repo on GitHub</a> so you can use the same parameters if you want to make a test deploy. It&rsquo;s an ASP.NET MVC 4 project so make sure that Visual Studio 2012 is installed or the <a href="http://stackoverflow.com/a/19385710/205859">necessary files</a> are copied to the server.</p>
+
+<p>Once you configured the plugins, create the project with the following parameters:</p>
+
+<p><img src="http://i.imgur.com/nIAcSQy.png" alt="SimpleMvcSitemap.Sample" /></p>
+
+<p>The parameters you may want to copy(don&rsquo;t forget to clone octopus branch):</p>
+
+<pre><code>https://github.com/uhaciogullari/SimpleMvcSitemap.git
+SimpleMvcSitemap.Sample\SimpleMvcSitemap.Sample.csproj
+/p:Configuration=Release;RunOctoPack=true
+</code></pre>
+
+<p>Try to build the project. It should fail with the OctoPack error below, otherwise there&rsquo;s a configuration error with your plugins or the project.</p>
+
+<blockquote><p>OctoPack cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see <a href="http://go.microsoft.com/fwlink/?LinkID=317568.">http://go.microsoft.com/fwlink/?LinkID=317568.</a></p></blockquote>
+
+<p>Build the project again and it should succeed. You can find the package OctoPack created in project&rsquo;s obj\octopacked folder. If you can verify that it&rsquo;s there, go on and <a href="http://docs.octopusdeploy.com/display/OD/Installing+Octopus">install Octopus Deploy</a>. Once it&rsquo;s up, create an API Key from <a href="http://your-octopus-server/app#/users/me">http://your-octopus-server/app#/users/me</a>. We will use it to publish the packages to the built-in NuGet repository. Change the MSBuild parameters in your Jenkins project to this (replace the API key and the Octopus URL):</p>
+
+<pre><code>/p:Configuration=Release;RunOctoPack=true;OctoPackPublishApiKey=YOURAPIKEY;OctoPackPublishPackageToHttp=http://your-octopus-server/nuget/packages
+</code></pre>
+
+<p>After a successful build you should see that the built-in NuGet repository has the package. You can check it from <a href="http://your-octopus-server/app#/configuration/feeds/feeds-builtin/test">http://your-octopus-server/app#/configuration/feeds/feeds-builtin/test</a>.</p>
+
+<p><img src="http://i.imgur.com/lZJOJno.png" alt="Package test" /></p>
+
+<p>There&rsquo;s one last thing we have to fix. When you only change a view in an MVC project, MSBuild won&rsquo;t generate a new version number thinking that the assembly has not changed at all. Although I have not tested it, it will be probably same for the content files. This wouldn&rsquo;t be a problem if Octopus Deploy would allow overwriting packages. In fact it silently drops the packages with the same version number. It is <a href="https://github.com/OctopusDeploy/Issues/issues/858">planned to be fixed soon</a> but it still won&rsquo;t allow overwriting. We have to force MSBuild to create a new version number in each build. That can be done with rebuilding the project. Just update the MSBuild parameter like this:</p>
+
+<pre><code>/t:Rebuild /p:Configuration=Release;RunOctoPack=true;OctoPackPublishApiKey=YOURAPIKEY;OctoPackPublishPackageToHttp=http://your-octopus-server/nuget/packages
+</code></pre>
+
+<p>That&rsquo;s all, you can go on and <a href="http://docs.octopusdeploy.com/display/OD/Deploying+packages">deploy the packages</a>.</p>
+]]></content>
+  </entry>
+  
+</feed>

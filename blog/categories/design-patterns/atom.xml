@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Design Patterns | Ufuk Hacıoğulları]]></title>
   <link href="http://uhaciogullari.github.io/blog/categories/design-patterns/atom.xml" rel="self"/>
   <link href="http://uhaciogullari.github.io/"/>
-  <updated>2014-03-09T17:15:37-07:00</updated>
+  <updated>2014-04-20T16:03:01+03:00</updated>
   <id>http://uhaciogullari.github.io/</id>
   <author>
     <name><![CDATA[Ufuk Hacıoğulları]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Strategy Pattern with Dependency Injection]]></title>
     <link href="http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection/"/>
-    <updated>2014-01-05T13:08:22-08:00</updated>
+    <updated>2014-01-05T23:08:22+02:00</updated>
     <id>http://uhaciogullari.github.io/blog/2014/01/05/strategy-pattern-with-dependency-injection</id>
     <content type="html"><![CDATA[<p><a href="http://sourcemaking.com/design_patterns/strategy">Strategy pattern</a> is one of the most useful design patterns in OOP. It lets you select an algoritm&rsquo;s implementation at runtime. However most of the examples you will find online won&rsquo;t make sense if you are using dependency injection. Here&rsquo;s one of them:</p>
 
@@ -217,7 +217,7 @@ public PaymentService(IPaymentMethodResolver paymentMethodResolver)
 public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
 {
    IPaymentMethod paymentMethod = _paymentMethodResolver.Resolve(paymentMethodName);
-    return paymentMethod.Process(request);
+   return paymentMethod.Process(request);
 }
 </code></pre>
 
