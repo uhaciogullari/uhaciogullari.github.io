@@ -169,7 +169,7 @@ public class PaymentService : IPaymentService
     public PaymentResult Pay(string paymentMethodName, PaymentRequest request)
     {
        IPaymentMethod paymentMethod = _paymentMethodResolver.Resolve(paymentMethodName);
-        return paymentMethod.Process(request);
+       return paymentMethod.Process(request);
     }
 }
 ```
