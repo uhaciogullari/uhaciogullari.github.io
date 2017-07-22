@@ -177,4 +177,4 @@ public class PaymentService : IPaymentService
 [1]: http://sourcemaking.com/design_patterns/strategy
 [2]: http://blog.ploeh.dk/2010/02/03/ServiceLocatorisanAnti-Pattern/
 [3]: http://en.wikipedia.org/wiki/Open/closed_principle
-[4]: http://www.castleproject.org/
+[4]: https://github.com/castleproject/Windsor
