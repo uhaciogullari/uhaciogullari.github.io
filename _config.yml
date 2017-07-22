@@ -1,7 +1,8 @@
-title: Long Haul
+title: Ufuk Hacıoğulları
+subtitle: Programming blog
 description: Long Form Jekyll theme built with SASS / COMPASS / SUSY
 
-url: http://brianmaierjr.github.com/long-haul
+url: http://uhaciogullari.github.io
 baseurl: ""
 paginate_path: "blog/page:num/"
 permalink: blog/:title/
@@ -16,13 +17,9 @@ navigation:
    url: /index.html
  - title: About
    url: /about
- - title: Contact
-   url: /contact
 
 social:
-   github: brianmaierjr
-   twitter: brianmaierjr
-   facebook: brianmaierjr
-   email: brimaidesigns@gmail.com
+   github: uhaciogullari
+   email: http://www.google.com/recaptcha/mailhide/d?k=01c3kzjml-BCAdTwiRgm8ucQ==&c=0NW5LlEdd1nEIz-ruQSLo86auCFEoGpgD5cZPjhlZdo=
 
-google_analytics: "UA-58263416-1"
+google_analytics: "UA-36762110-2"
