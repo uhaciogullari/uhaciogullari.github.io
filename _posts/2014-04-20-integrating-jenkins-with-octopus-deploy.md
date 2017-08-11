@@ -54,8 +54,8 @@ That's all, you can go on and [deploy the packages][10].
 [3]: https://wiki.jenkins-ci.org/display/JENKINS/Git+Plugin
 [4]: https://github.com/uhaciogullari/SimpleMvcSitemap
 [5]: http://stackoverflow.com/a/19385710/205859
-[6]: http://i.imgur.com/nIAcSQy.png
+[6]: https://i.imgur.com/nIAcSQy.png
 [7]: http://docs.octopusdeploy.com/display/OD/Installing+Octopus
-[8]: http://i.imgur.com/lZJOJno.png
+[8]: https://i.imgur.com/lZJOJno.png
 [9]: https://github.com/OctopusDeploy/Issues/issues/858
 [10]: http://docs.octopusdeploy.com/display/OD/Deploying+packages
