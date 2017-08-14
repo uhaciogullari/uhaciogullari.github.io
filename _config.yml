@@ -1,7 +1,7 @@
 title: Ufuk Hacıoğulları
 description: Programming blog
 
-url: http://uhaciogullari.github.io
+url: https://uhaciogullari.github.io
 baseurl: ""
 paginate_path: "blog/page:num/"
 permalink: blog/:title/
