@@ -5,7 +5,9 @@ date: 2017-11-11 23:08:22 +0100
 categories: [.NET Core, C#, PostgreSQL, Integration Testing]
 ---
 
-PostgreSQL is becoming an attractive alternative for .NET Core applications with support from popular ORMs like Entity Framework Core and Dapper. If you are thinking about switching to Postgres, having solid tests will make you more confident with the transition. In this blog post, I will explain how you can use basic Postgres CLI tools, create and clean up databases for your tests.
+PostgreSQL is becoming an attractive alternative for .NET Core applications with support from popular ORMs like Entity Framework Core and Dapper. If you are thinking about switching to Postgres, having solid tests will make you more confident with the transition.
+
+In this blog post, I will explain how you can use basic Postgres CLI tools, create and clean up databases for your tests.
 
 ## Setup 
 
@@ -22,7 +24,7 @@ We also need to provide credentials to these applications every time we invoke t
     SETX PGUSER postgres
     SETX PGPASSWORD your-own-password
 
-You will need to restart your console the changes to take effect. After that, you should be able to connect to Postgres with psql tool.
+You will need to restart your console for the changes to take effect. After that, you should be able to connect to Postgres with psql tool.
 
 ![Running psql for the first time][3]
 
@@ -34,7 +36,7 @@ Postgress comes with another CLI called [createuser][4]. You can invoke it direc
 
     createuser -d -P integration_test_user
 
-If you are still running psql, you can execute Windows commands by prefixing it with `\!`:
+If you are still running psql, you can execute Windows commands by prefixing it with `\!`
 
     \! createuser -d -P integration_test_user
 
@@ -42,10 +44,12 @@ You will get a password prompt for the user, make sure it's saved as well and we
 
 ## Test project
 
-
+To run our tests, we will create a new database with its schema and destroy it after the tests are run. [xUnit.net][5] offers [Collection Fixtures][6] feature that enables us to do that.
 
 
 [1]: https://www.postgresql.org/download/windows/
 [2]: https://www.postgresql.org/docs/current/static/libpq-pgpass.html
 [3]: /assets/img/psql.png
 [4]: https://www.postgresql.org/docs/10/static/app-createuser.html
+[5]: https://xunit.github.io
+[6]: https://xunit.github.io/docs/shared-context.html#collection-fixture
