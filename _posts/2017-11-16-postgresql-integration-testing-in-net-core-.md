@@ -28,7 +28,7 @@ You will need to restart your console for the changes to take effect. After that
 
 ![Running psql for the first time][3]
 
-Here you see that you are connected to `postgres` database (it's not the username!) and `=#` means that you are logged in as a superuser. A superuser can override all access restrictions within the database. Being a good developer, we will create a new user with less privileges for our tests.
+Here you see that you are connected to *postgres* database (it's not the username!) and *=#* means that you are logged in as a superuser. A superuser can override all access restrictions within the database. Being a good developer, we will create a new user with less privileges for our tests.
 
 ## <a id="creating-test-user">Creating test user</a>
 
@@ -36,7 +36,7 @@ Postgress comes with another CLI called [createuser][4]. You can invoke it direc
 
     createuser -d -P integration_test_user
 
-If you are still running psql, you can execute Windows commands by prefixing it with `\!`
+If you are still running psql, you can execute Windows commands by prefixing it with *\\!*
 
     \! createuser -d -P integration_test_user
 
@@ -53,46 +53,46 @@ Creating and dropping databases can be implemented easily but it's not something
 We'll start really simple to make sure we can create and drop a database. Don't worry about the connection string in the code for now, we'll move it to a setting file.
 
 ```csharp
-    using System;
-    using DoomedDatabases.Postgres;
-    using Xunit;
+using System;
+using DoomedDatabases.Postgres;
+using Xunit;
 
-    public class DatabaseFixture : IDisposable
+public class DatabaseFixture : IDisposable
+{
+    public DatabaseFixture()
     {
-        public DatabaseFixture()
-        {
-            TestDatabase = new TestDatabaseBuilder().WithConnectionString("User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;").Build();
-            TestDatabase.Create();
-        }
-
-        public ITestDatabase TestDatabase { get; }
-
-        public void Dispose()
-        {
-            TestDatabase.Drop();
-        }
+        TestDatabase = new TestDatabaseBuilder().WithConnectionString("User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;").Build();
+        TestDatabase.Create();
     }
 
-    [CollectionDefinition("Database")]
-    public class DatabaseCollectionFixture : ICollectionFixture<DatabaseFixture>
+    public ITestDatabase TestDatabase { get; }
+
+    public void Dispose()
     {
+        TestDatabase.Drop();
     }
+}
+
+[CollectionDefinition("Database")]
+public class DatabaseCollectionFixture : ICollectionFixture<DatabaseFixture>
+{
+}
 ```
 
 We will attach this fixture to a test class with a CollectionAttribute. xUnit will make sure the fixture is created before any test is run and dispose it afterwards.
 
 ```csharp
-    using Xunit;
+using Xunit;
 
-    [Collection("Database")]
-    public class CreateDatabaseTests
+[Collection("Database")]
+public class CreateDatabaseTests
+{
+    [Fact]
+    public void CreateAndDropDatabase()
     {
-        [Fact]
-        public void CreateAndDropDatabase()
-        {
-            Assert.True(true);
-        }
+        Assert.True(true);
     }
+}
 ```
 
 This test just makes sure that we can run the fixture code without any exceptions. If everything is ok, the test should pass. You should be able to see the database getting created and dropped while debugging.
@@ -104,14 +104,14 @@ This test just makes sure that we can run the fixture code without any exception
 Test projects are not created with setting files so we have to create one manually. Create an appsettings.json file in the test project folder that includes your connection string:
 
 ```json
-    {
-      "ConnectionStrings": {
-        "DefaultConnection": "User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;"
-      }
-    }
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;"
+  }
+}
 ```
 
-We also have to make sure that the file is copied to output directory. Add this line inside an `<ItemGrop>` tag in your test project csproj file.
+We also have to make sure that the file is copied to output directory. Add this line inside an *\<ItemGroup\>* tag in your test project csproj file.
 
     <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
 
@@ -121,23 +121,25 @@ We need [Microsoft.Extensions.Configuration.Json package][9] to read settings fr
 
 Now we can wire it up:
 
-    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-    TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+```csharp
+var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+```
 
-If you want to use a different connection string name, you can use `WithConnectionStringName` method.
+If you want to use a different connection string name, you can use *WithConnectionStringName* method.
 
 ## Creating the schema with scripts
 
 Creating a database won't be very useful without the schema and proper data in place. If you are following the [evolutionary database design][10], it's very easy to create it from scratch. You can easily run the scripts in a folder on the test database.
 
 ```csharp
-    public DatabaseFixture()
-    {
-        var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
-        TestDatabase.Create();
-        TestDatabase.RunScripts("./DatabaseScripts");
-    }
+public DatabaseFixture()
+{
+    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+    TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+    TestDatabase.Create();
+    TestDatabase.RunScripts("./DatabaseScripts");
+}
 ```
 
 RunScripts method will run all the files in lexicographical order.
@@ -145,76 +147,76 @@ RunScripts method will run all the files in lexicographical order.
 If you have script files in another project already, you can link them in your test project like this:
 
 ```xml
-    <Content Include="..\OtherProject\DatabaseScripts\*.sql" Link="DatabaseScripts\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+<Content Include="..\OtherProject\DatabaseScripts\*.sql" Link="DatabaseScripts\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
 ```
 
 ## Creating the schema with Entity Framewok Core
 
-Entity Framework Core can also be used to create the schema. [Andrew Lock][11] has [a great post][12] for using the Postgres naming convention(snake_case) in EF Core, I moved it to [a gist][13] for the sake of clarity, you can plug it in easily if you wish. We'll create a really simple DbContext.
+Entity Framework Core can also be used to create the schema. We will be using [Postgres provider for Entity Framework Core][11]. Andrew Lock has [a great post][12] for using the Postgres naming convention (snake_case) in EF Core, I moved it to [a gist][13] for the sake of clarity, you can plug it in easily if you wish. We'll create a really simple DbContext.
 
 ```csharp
-    public class User
+public class User
+{
+    public int Id { get; set; }
+    public string Username { get; set; }
+}
+
+public class TestDbContext : DbContext
+{
+    public TestDbContext(DbContextOptions options) : base(options)
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
     }
 
-    public class TestDbContext : DbContext
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public TestDbContext(DbContextOptions options) : base(options)
-        {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            //modelBuilder.UsePostgresConventions();
-        }
-
-        public DbSet<User> Users { get; set; }
+        base.OnModelCreating(modelBuilder);
+        //modelBuilder.UsePostgresConventions();
     }
+
+    public DbSet<User> Users { get; set; }
+}
 ```
 
 Now we can instantiate TestDbContext in DatabaseFixture and let EF create the schema:
 
 ```csharp
-    public DatabaseFixture()
-    {
-        var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-        TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
-        TestDatabase.Create();
+public DatabaseFixture()
+{
+    var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+    TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+    TestDatabase.Create();
+    var builder = new DbContextOptionsBuilder<TestDbContext>();
+    builder.UseNpgsql(TestDatabase.ConnectionString);
+    DbContext = new TestDbContext(builder.Options);
+    DbContext.Database.EnsureCreated();
+}
 
-        var builder = new DbContextOptionsBuilder<TestDbContext>();
-        builder.UseNpgsql(TestDatabase.ConnectionString);
-        DbContext = new TestDbContext(builder.Options);
-        DbContext.Database.EnsureCreated();
-    }
+public TestDbContext DbContext { get; }
 ```
 
 Finally we can implement tests using EF:
 
 ```csharp
-    [Collection("Database")]
-    public class UserTests
+[Collection("Database")]
+public class UserTests
+{
+    private TestDbContext testDbContext;
+
+    public UserTests(DatabaseFixture databaseFixture)
     {
-        private TestDbContext testDbContext;
-
-        public UserTests(DatabaseFixture databaseFixture)
-        {
-            testDbContext = databaseFixture.DbContext;
-        }
-
-        [Fact]
-        public async Task InsertUsers()
-        {
-            await testDbContext.Users.AddAsync(new User { Username = "Pramod" });
-            await testDbContext.Users.AddAsync(new User { Username = "Martin" });
-            await testDbContext.SaveChangesAsync();
-
-            var count = await testDbContext.Users.CountAsync();
-            Assert.Equal(2, count);
-        }
+        testDbContext = databaseFixture.DbContext;
     }
+
+    [Fact]
+    public async Task InsertUsers()
+    {
+        await testDbContext.Users.AddAsync(new User { Username = "Pramod" });
+        await testDbContext.Users.AddAsync(new User { Username = "Martin" });
+        await testDbContext.SaveChangesAsync();
+        var count = await testDbContext.Users.CountAsync();
+        Assert.Equal(2, count);
+    }
+}
 ```
 
 ## Adding extensions to the test database
@@ -240,7 +242,7 @@ Mark the database as a template
 Finally close the psql process (there should be no active connections to a database template when we want to use it) and we can use the template now:
 
 ```csharp
-    TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTemplateDatabase("uuid_extension_enabled").Build();
+TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTemplateDatabase("uuid_extension_enabled").Build();
 ```
 
 [1]: https://www.postgresql.org/download/windows/
@@ -253,7 +255,7 @@ Finally close the psql process (there should be no active connections to a datab
 [8]: /assets/img/create_drop_db.gif
 [9]: https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json
 [10]: https://martinfowler.com/articles/evodb.html
-[11]: https://andrewlock.net
+[11]: https://www.nuget.org/packages/Npgsql.EntityFrameworkCore.PostgreSQL/
 [12]: https://andrewlock.net/customising-asp-net-core-identity-ef-core-naming-conventions-for-postgresql/
 [13]: https://gist.github.com/uhaciogullari/94bd1e56bbd6feaadfe83b4a61e3e1fd
 [14]: https://www.postgresql.org/docs/current/static/external-extensions.html
