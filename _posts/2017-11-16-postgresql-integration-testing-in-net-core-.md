@@ -52,6 +52,7 @@ Creating and dropping databases can be implemented easily but it's not something
 
 We'll start really simple to make sure we can create and drop a database. Don't worry about the connection string in the code for now, we'll move it to a setting file.
 
+```csharp
     using System;
     using DoomedDatabases.Postgres;
     using Xunit;
@@ -76,9 +77,11 @@ We'll start really simple to make sure we can create and drop a database. Don't 
     public class DatabaseCollectionFixture : ICollectionFixture<DatabaseFixture>
     {
     }
+```
 
 We will attach this fixture to a test class with a CollectionAttribute. xUnit will make sure the fixture is created before any test is run and dispose it afterwards.
 
+```csharp
     using Xunit;
 
     [Collection("Database")]
@@ -90,6 +93,7 @@ We will attach this fixture to a test class with a CollectionAttribute. xUnit wi
             Assert.True(true);
         }
     }
+```
 
 This test just makes sure that we can run the fixture code without any exceptions. If everything is ok, the test should pass. You should be able to see the database getting created and dropped while debugging.
 
@@ -99,11 +103,13 @@ This test just makes sure that we can run the fixture code without any exception
 
 Test projects are not created with setting files so we have to create one manually. Create an appsettings.json file in the test project folder that includes your connection string:
 
+```json
     {
       "ConnectionStrings": {
         "DefaultConnection": "User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;"
       }
     }
+```
 
 We also have to make sure that the file is copied to output directory. Add this line inside an `<ItemGrop>` tag in your test project csproj file.
 
@@ -124,6 +130,7 @@ If you want to use a different connection string name, you can use `WithConnecti
 
 Creating a database won't be very useful without the schema and proper data in place. If you are following the [evolutionary database design][10], it's very easy to create it from scratch. You can easily run the scripts in a folder on the test database.
 
+```csharp
     public DatabaseFixture()
     {
         var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -131,17 +138,21 @@ Creating a database won't be very useful without the schema and proper data in p
         TestDatabase.Create();
         TestDatabase.RunScripts("./DatabaseScripts");
     }
+```
 
 RunScripts method will run all the files in lexicographical order.
 
 If you have script files in another project already, you can link them in your test project like this:
 
+```xml
     <Content Include="..\OtherProject\DatabaseScripts\*.sql" Link="DatabaseScripts\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+```
 
 ## Creating the schema with Entity Framewok Core
 
 Entity Framework Core can also be used to create the schema. [Andrew Lock][11] has [a great post][12] for using the Postgres naming convention(snake_case) in EF Core, I moved it to [a gist][13] for the sake of clarity, you can plug it in easily if you wish. We'll create a really simple DbContext.
 
+```csharp
     public class User
     {
         public int Id { get; set; }
@@ -162,9 +173,11 @@ Entity Framework Core can also be used to create the schema. [Andrew Lock][11] h
 
         public DbSet<User> Users { get; set; }
     }
+```
 
 Now we can instantiate TestDbContext in DatabaseFixture and let EF create the schema:
 
+```csharp
     public DatabaseFixture()
     {
         var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
@@ -176,9 +189,11 @@ Now we can instantiate TestDbContext in DatabaseFixture and let EF create the sc
         DbContext = new TestDbContext(builder.Options);
         DbContext.Database.EnsureCreated();
     }
+```
 
 Finally we can implement tests using EF:
 
+```csharp
     [Collection("Database")]
     public class UserTests
     {
@@ -200,6 +215,7 @@ Finally we can implement tests using EF:
             Assert.Equal(2, count);
         }
     }
+```
 
 ## Adding extensions to the test database
 
@@ -223,7 +239,9 @@ Mark the database as a template
 
 Finally close the psql process (there should be no active connections to a database template when we want to use it) and we can use the template now:
 
+```csharp
     TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTemplateDatabase("uuid_extension_enabled").Build();
+```
 
 [1]: https://www.postgresql.org/download/windows/
 [2]: https://www.postgresql.org/docs/current/static/libpq-pgpass.html
