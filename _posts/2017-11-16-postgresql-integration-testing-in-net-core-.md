@@ -28,7 +28,7 @@ You will need to restart your console for the changes to take effect. After that
 
 ![Running psql for the first time][3]
 
-Here you see that you are connected to *postgres* database (it's not the username!) and *=#* means that you are logged in as a superuser. A superuser can override all access restrictions within the database. Being a good developer, we will create a new user with less privileges for our tests.
+Here you see that you are connected to *postgres* database (it's not the username) and *=#* means that you are logged in as a superuser. A superuser can override all access restrictions within the database. Being a good developer, we will create a new user with less privileges for our tests.
 
 ## <a id="creating-test-user">Creating test user</a>
 
@@ -36,7 +36,7 @@ Postgress comes with another CLI called [createuser][4]. You can invoke it direc
 
     createuser -d -P integration_test_user
 
-If you are still running psql, you can execute Windows commands by prefixing it with *\\!*
+If you are still running psql, you can execute console commands by prefixing it with *\\!*
 
     \! createuser -d -P integration_test_user
 
@@ -59,17 +59,18 @@ using Xunit;
 
 public class DatabaseFixture : IDisposable
 {
+    private readonly ITestDatabase testDatabase;
+
     public DatabaseFixture()
     {
-        TestDatabase = new TestDatabaseBuilder().WithConnectionString("User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;").Build();
-        TestDatabase.Create();
+        var connectionString = "User ID=integration_test_user;Password=yourpassword;Server=localhost;Database=postgres;";
+        testDatabase = new TestDatabaseBuilder().WithConnectionString(connectionString).Build();
+        testDatabase.Create();
     }
-
-    public ITestDatabase TestDatabase { get; }
 
     public void Dispose()
     {
-        TestDatabase.Drop();
+        testDatabase.Drop();
     }
 }
 
@@ -123,7 +124,7 @@ Now we can wire it up:
 
 ```csharp
 var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+testDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
 ```
 
 If you want to use a different connection string name, you can use *WithConnectionStringName* method.
@@ -136,9 +137,9 @@ Creating a database won't be very useful without the schema and proper data in p
 public DatabaseFixture()
 {
     var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-    TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
-    TestDatabase.Create();
-    TestDatabase.RunScripts("./DatabaseScripts");
+    testDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
+    testDatabase.Create();
+    testDatabase.RunScripts("./DatabaseScripts");
 }
 ```
 
@@ -147,12 +148,14 @@ RunScripts method will run all the files in lexicographical order.
 If you have script files in another project already, you can link them in your test project like this:
 
 ```xml
-<Content Include="..\OtherProject\DatabaseScripts\*.sql" Link="DatabaseScripts\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+<Content Include="..\OtherProject\DatabaseScripts\*.sql"
+         Link="DatabaseScripts\%(Filename)%(Extension)"
+         CopyToOutputDirectory="PreserveNewest" />
 ```
 
 ## Creating the schema with Entity Framewok Core
 
-Entity Framework Core can also be used to create the schema. We will be using [Postgres provider for Entity Framework Core][11]. Andrew Lock has [a great post][12] for using the Postgres naming convention (snake_case) in EF Core, I moved it to [a gist][13] for the sake of clarity, you can plug it in easily if you wish. We'll create a really simple DbContext.
+Entity Framework Core can also be used to create the schema. We will be using [Postgres provider for Entity Framework Core][11]. Andrew Lock has [a great post][12] for using the Postgres naming convention (snake_case) in EF Core, I moved it to [a gist][13] for the sake of brevity, you can plug it in easily if you wish. We'll create a really simple DbContext.
 
 ```csharp
 public class User
@@ -185,6 +188,7 @@ public DatabaseFixture()
     var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
     TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).Build();
     TestDatabase.Create();
+
     var builder = new DbContextOptionsBuilder<TestDbContext>();
     builder.UseNpgsql(TestDatabase.ConnectionString);
     DbContext = new TestDbContext(builder.Options);
@@ -219,6 +223,17 @@ public class UserTests
 }
 ```
 
+## Overwriting the connection string for the ASP.NET Core MVC application
+
+We want to use the test database while we are creating a test server for our ASP.NET Core MVC application. Assuming you have the schema in place already, you need to use the connection string for the database we create:
+
+```csharp
+var webHostBuilder = new WebHostBuilder().UseStartup<Startup>()
+                                         .UseSetting("ConnectionStrings:DefaultConnection", testDatabase.ConnectionString);
+
+var server = new TestServer(webHostBuilder);
+```
+
 ## Adding extensions to the test database
 
 One thing you will be missing in a default Postgres database is GUID ids. It can be easily enabled by adding an [extension][14] but only superusers have this privilege. Since we are deliberately not using a superuser, we cannot do it with the test scripts. We can accomplish this with [template databases][15]. This also requires a superuser but we have to do it only once.
@@ -242,7 +257,7 @@ Mark the database as a template
 Finally close the psql process (there should be no active connections to a database template when we want to use it) and we can use the template now:
 
 ```csharp
-TestDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTemplateDatabase("uuid_extension_enabled").Build();
+testDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTemplateDatabase("uuid_extension_enabled").Build();
 ```
 
 [1]: https://www.postgresql.org/download/windows/
