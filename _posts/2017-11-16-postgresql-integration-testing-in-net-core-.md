@@ -3,6 +3,7 @@ layout: post
 title: "PostgreSQL Integration Testing in .NET Core"
 date: 2017-11-16 00:01:00 +0100
 categories: [.NET Core, C#, PostgreSQL, Integration Testing]
+image: postgres-net-core3.png
 ---
 
 PostgreSQL is becoming an attractive alternative for .NET Core applications with support from popular ORMs like Entity Framework Core and Dapper. If you are thinking about switching to Postgres, having solid tests will make you more confident with the transition.
