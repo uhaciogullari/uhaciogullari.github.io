@@ -3,6 +3,7 @@ layout: post
 title: "PostgreSQL Integration Testing in .NET Core"
 date: 2017-11-16 00:01:00 +0100
 categories: [.NET Core, C#, PostgreSQL, Integration Testing]
+image: postgres-net-core.png
 ---
 
 PostgreSQL is becoming an attractive alternative for .NET Core applications with support from popular ORMs like Entity Framework Core and Dapper. If you are thinking about switching to Postgres, having solid tests will make you more confident with the transition.
@@ -266,7 +267,7 @@ testDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTe
 [4]: https://www.postgresql.org/docs/10/static/app-createuser.html
 [5]: https://xunit.github.io
 [6]: https://xunit.github.io/docs/shared-context.html#collection-fixture
-[7]: https://www.nuget.org/packages/DoomedDatabases.Postgres
+[7]: https://github.com/uhaciogullari/doomed-databases
 [8]: /assets/img/create_drop_db.gif
 [9]: https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json
 [10]: https://martinfowler.com/articles/evodb.html
