@@ -6,7 +6,7 @@ categories: [.NET Core, Nuget]
 image: nuget5.png
 ---
 
-Lately I have been writing .NET Core APIs on Windows and testing it in Ubuntu because one of the dependencies fails to work on Windows. These APIs use a library for some shared functionality and I had to make them available also in the Ubuntu VM. Using a local folder as a feed will not work and copying every version manually is a lot of work. Also, there are no free NuGet feeds available that we can use. I decided to use a Git repository to share the feed since there are a few free providers.
+Lately I have been writing .NET Core APIs on Windows and testing them in Ubuntu because one of the dependencies fails to work on Windows. These APIs use a library for some shared functionality and I had to make them available also in the Ubuntu VM. Using a local folder as a feed will not work and copying every version manually is a lot of work. Also, there are no free NuGet feeds available that we can use. I decided to use a Git repository to share the feed since there are a few free providers.
 
 ![Project folders][1]
 
@@ -24,11 +24,28 @@ I created a folder named nuget-feed along with my other project folders and init
 
 We just need to do a git pull when  there is a new package and this is all we need to do to build projects that are using packages from our private feed.
 
-We still need to create a package for our new version of our library and push it to the feed. I created a small script to do this:
+We still need to create a package for every new version of our library and push it to the feed. I created a small script to do this:
 
-<script src="https://gist.github.com/uhaciogullari/946548ad3f1cbee010a1655c445f7371.js"></script>
+```bash
+# first folder contains the csproj you want to package
+# second folder is the relative path to your nuget feed folder from the library folder
+dotnet pack -c Release ./src/Trail.Common -o ./../../../nuget-feed
 
-This script requires some Unix tools to be in the path. Fortunately, [Git for Windows installation][2] takes care of that for us so it will work on Windows too. Modify the paths as you like and put this in your library repository. You can pack and push your package in a single step by running this script.
+# switch to feed folder
+cd ../nuget-feed
+
+# add new package
+git add -A
+
+# get the file name
+export NewFile=`git status --porcelain | awk '{print $2}'`
+
+# commit & push
+git commit -m "Added $NewFile"
+git push
+```
+
+This script requires some Unix tools to be in the path. Fortunately, [Git for Windows installation][2] takes care of that for us so it will work on Windows too. Modify the paths as you like and save it as pack.sh in your library repository. You can pack and push your package in a single step by running this script.
 
 Now you have a private NuGet feed with zero costs.
 
