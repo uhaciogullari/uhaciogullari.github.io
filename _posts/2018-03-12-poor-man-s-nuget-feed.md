@@ -45,7 +45,7 @@ git commit -m "Added $NewFile"
 git push
 ```
 
-This script requires some Unix tools to be in the path. Fortunately, [Git for Windows installation][2] takes care of that for us so it will work on Windows too. Modify the paths as you like and save it as pack.sh in your library repository. You can pack and push your package in a single step by running this script.
+This script requires .NET Core CLI and some Unix tools to be in the path. Fortunately, [Git for Windows installation][2] takes care of that for us so it will work on Windows too. Modify the paths as you like and save it as pack.sh in your library repository. You can pack and push your package in a single step by running this script.
 
 Now you have a private NuGet feed with zero costs.
 
