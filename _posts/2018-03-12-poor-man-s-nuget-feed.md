@@ -3,7 +3,7 @@ layout: post
 title: "Poor man's NuGet feed"
 date: 2018-03-12 23:00:00 +0100
 categories: [.NET Core, Nuget]
-image: nuget3.png
+image: nuget4.png
 ---
 
 Lately I have been writing .NET Core APIs on Windows and testing it in Ubuntu because one of the dependencies fails to work on Windows. These APIs use a library for some shared functionality and I had to make them available also in the Ubuntu VM. Using a local folder as a feed will not work and copying every version manually is a lot of work. Also, there are no free NuGet feeds available that we can use. I decided to use a Git repository to share the feed since there are a few free providers.
