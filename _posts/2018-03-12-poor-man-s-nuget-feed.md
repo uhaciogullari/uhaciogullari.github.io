@@ -6,7 +6,7 @@ categories: [.NET Core, Nuget]
 image: nuget5.png
 ---
 
-Lately I have been writing .NET Core APIs on Windows and testing them in Ubuntu because one of the dependencies fails to work on Windows. These APIs use a library for some shared functionality and I had to make them available also in the Ubuntu VM. Using a local folder as a feed will not work and copying every version manually is a lot of work. Also, there are no free private NuGet feeds available that we can use. I decided to use a Git repository to share the feed since there are a few free Git hosting services.
+Lately I have been writing .NET Core APIs on Windows and testing them in Ubuntu because one of the dependencies fails to work on Windows. These APIs use a library for some shared functionality and I had to make them available when I am working on the other machine. There are no free NuGet feeds available that will keep your packages private. I decided to use a Git repository to share the feed since there are a few free Git hosting services.
 
 ![Project folders][1]
 
