@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Gothic 2 Notr Pickpocket List</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="app">
+
+  <h3>Gothic 2 NoTR Pickpocket List</h3>
+
+  <form action="#">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <label for="dex">Dexterity</label>
+        <input type="number" class="form-control" id="dexterity" v-model="dexterity">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="chapter">Chapter</label>
+        <input type="number" class="form-control" id="chapter" v-model="chapter">
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="chapter">Filter pickpockted</label>
+        <input type="checkbox" class="form-control" id="filterPickPocketed" v-model="filterPickPocketed">
+      </div>
+    </div>
+
+  </form>
+
+  <table class="row table table-bordered">
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Name</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody tag="tbody" is="vue:transition-group" name="fade">
+      <tr v-for="(npc, index) in pickables" :key="npc.id">
+        <td>
+          <button v-if="!isPickPocketed(npc.id)" @click="markPickPocketed(npc.id, true)" type="button" class="btn btn-success">Pickpocketed</button>
+          <button v-if="isPickPocketed(npc.id)" @click="markPickPocketed(npc.id, false)" type="button" class="btn btn-warning">Not yet</button>
+        </td>
+        <td>
+          <p>{{npc.name}}</p>
+          <p>{{npc.dexterity}}</p>
+          <p>{{npc.loot}}</p>
+        </td>
+        <td>{{npc.location}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <button @click="reset()" type="button" class="btn btn-danger">Reset data</button>
+
+</div>
+<!-- partial -->
+  <script src='https://unpkg.com/vue@next'></script><script  src="./script.js"></script>
+
+</body>
+</html>
