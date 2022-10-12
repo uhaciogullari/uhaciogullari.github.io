@@ -51,6 +51,9 @@ Vue.createApp({
         n.chapter <= this.chapter &&
         (!this.filterPickPocketed ||
           this.pickPocketState[n.id.toString()] !== true);
+    },
+    check(e) {
+      console.log(e.target.checked);
     }
   },
   data() {

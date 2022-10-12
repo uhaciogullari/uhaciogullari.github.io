@@ -3,53 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <title>CodePen - Gothic 2 Notr Pickpocket List</title>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div id="app">
 
-  <h3>Gothic 2 NoTR Pickpocket List</h3>
+  <div class="card mb-3 mx-auto" style="max-width: 18rem;">
+    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2061226500">
+      <img class="card-img-top" src="https://i.imgur.com/2HUHy6w.png" alt="Card image cap"></a>
+    <div class="card-body">
 
-  <form action="#">
-    <div class="row">
-      <div class="col-md-4 mb-3">
-        <label for="dex">Dexterity</label>
-        <input type="number" class="form-control" id="dexterity" v-model="dexterity">
-      </div>
-      <div class="col-md-4 mb-3">
-        <label for="chapter">Chapter</label>
-        <input type="number" class="form-control" id="chapter" v-model="chapter">
-      </div>
-      <div class="col-md-4 mb-3">
-        <label for="chapter">Filter pickpockted</label>
-        <input type="checkbox" class="form-control" id="filterPickPocketed" v-model="filterPickPocketed">
-      </div>
+      <h5 class="card-title text-center mb-2">Gothic II Gold Edition</h5>
+      <h6 class="card-subtitle text-center mb-2">Pickpocket List</h6>
     </div>
+  </div>
 
-  </form>
+  <table class="table table-nonfluid center">
+    <tbody>
+      <tr>
+        <td>Dexterity</td>
+        <td>
+          <input type="number" v-model="dexterity" />
+        </td>
+      </tr>
+      <tr>
+        <td>Chapter</td>
+        <td>
+          <input type="number" v-model="chapter" />
+        </td>
+      </tr>
+      <tr>
+        <td>Filter pickpocketed</td>
+        <td class="form-switch">
+          <input type="checkbox" role="switch" class="form-check-input" v-model="filterPickPocketed">
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <table class="row table table-bordered">
+  <table id="npc-table" class="table table-striped">
     <thead>
       <tr>
-        <th>Status</th>
+        <th></th>
         <th>Name</th>
         <th>Location</th>
+        <th>Loot</th>
       </tr>
     </thead>
     <tbody tag="tbody" is="vue:transition-group" name="fade">
       <tr v-for="(npc, index) in pickables" :key="npc.id">
-        <td>
-          <button v-if="!isPickPocketed(npc.id)" @click="markPickPocketed(npc.id, true)" type="button" class="btn btn-success">Pickpocketed</button>
-          <button v-if="isPickPocketed(npc.id)" @click="markPickPocketed(npc.id, false)" type="button" class="btn btn-warning">Not yet</button>
+        <td class="form-switch pickpocket-switch">
+          <input type="checkbox" role="switch" class="form-check-input" :checked="isPickPocketed(npc.id)" @change="markPickPocketed(npc.id, $event.target.checked)">
         </td>
-        <td>
-          <p>{{npc.name}}</p>
-          <p>{{npc.dexterity}}</p>
-          <p>{{npc.loot}}</p>
-        </td>
+        <td>{{npc.name}}</td>
         <td>{{npc.location}}</td>
+        <td>{{npc.loot}}</td>
       </tr>
     </tbody>
   </table>
@@ -57,7 +67,8 @@
 
 </div>
 <!-- partial -->
-  <script src='https://unpkg.com/vue@next'></script><script  src="./script.js"></script>
+  <script src='https://unpkg.com/vue@next'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/js/bootstrap.min.js'></script><script  src="./script.js"></script>
 
 </body>
 </html>

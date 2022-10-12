@@ -1,7 +1,6 @@
 #app {
   background-color: #fff;
   padding: 20px;
-  margin: 40px;
 }
 
 h3 {
@@ -14,19 +13,33 @@ form {
   display: block;
 }
 
-input {
-  width: 100%;
+.table td, th {
+  text-align: center;
 }
 
-table {
-  margin: 20px 0;
+.table-nonfluid {
+  width: auto;
+  margin: 60px 0;
+}
+
+.center {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+td.pickpocket-switch {
+  padding-left: 2.5rem;
+}
+
+tr {
+  height: auto;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: max-height 0.5s ease;
 }
 
 .fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
+  max-height: 0px;
 }
