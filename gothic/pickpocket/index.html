@@ -1,74 +1,80 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>CodePen - Gothic 2 Notr Pickpocket List</title>
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'><link rel="stylesheet" href="./style.css">
+    <meta charset="UTF-8">
+    <title>CodePen - Gothic 2 Notr Pickpocket List</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
+    <link rel="stylesheet" href="./style.css">
 
 </head>
 <body>
 <!-- partial:index.partial.html -->
 <div id="app">
 
-  <div class="card mb-3 mx-auto" style="max-width: 18rem;">
-    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2061226500">
-      <img class="card-img-top" src="https://i.imgur.com/2HUHy6w.png" alt="Card image cap"></a>
-    <div class="card-body">
+    <div class="card mb-3 mx-auto" style="max-width: 18rem;">
+        <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2061226500">
+            <img class="card-img-top" src="https://i.imgur.com/2HUHy6w.png" alt="Card image cap"></a>
+        <div class="card-body">
 
-      <h5 class="card-title text-center mb-2">Gothic II Gold Edition</h5>
-      <h6 class="card-subtitle text-center mb-2">Pickpocket List</h6>
+            <h5 class="card-title text-center mb-2">Gothic II Gold Edition</h5>
+            <h6 class="card-subtitle text-center mb-2">Pickpocket List</h6>
+        </div>
     </div>
-  </div>
 
-  <table class="table table-nonfluid center">
-    <tbody>
-      <tr>
-        <td>Dexterity</td>
-        <td>
-          <input type="number" v-model="dexterity" />
-        </td>
-      </tr>
-      <tr>
-        <td>Chapter</td>
-        <td>
-          <input type="number" v-model="chapter" />
-        </td>
-      </tr>
-      <tr>
-        <td>Filter pickpocketed</td>
-        <td class="form-switch">
-          <input type="checkbox" role="switch" class="form-check-input" v-model="filterPickPocketed">
-        </td>
-      </tr>
-    </tbody>
-  </table>
+    <table class="table table-nonfluid center">
+        <tbody>
+        <tr>
+            <td>Dexterity</td>
+            <td>
+                <input type="number" v-model="dexterity"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Chapter</td>
+            <td>
+                <input type="number" v-model="chapter"/>
+            </td>
+        </tr>
+        <tr>
+            <td>Filter pickpocketed</td>
+            <td class="form-switch">
+                <input type="checkbox" role="switch" class="form-check-input" v-model="filterPickpocketed">
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-  <table id="npc-table" class="table table-striped">
-    <thead>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Location</th>
-        <th>Loot</th>
-      </tr>
-    </thead>
-    <tbody tag="tbody" is="vue:transition-group" name="fade">
-      <tr v-for="(npc, index) in pickables" :key="npc.id">
-        <td class="form-switch pickpocket-switch">
-          <input type="checkbox" role="switch" class="form-check-input" :checked="isPickPocketed(npc.id)" @change="markPickPocketed(npc.id, $event.target.checked)">
-        </td>
-        <td>{{npc.name}}</td>
-        <td>{{npc.location}}</td>
-        <td>{{npc.loot}}</td>
-      </tr>
-    </tbody>
-  </table>
-  <button @click="reset()" type="button" class="btn btn-danger">Reset data</button>
+    <table id="npc-table" class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Loot</th>
+        </tr>
+        </thead>
+        <tbody tag="tbody" is="vue:transition-group" name="fade">
+        <tr v-for="(npc, index) in pickables" :key="npc.id">
+            <td class="form-switch pickpocket-switch">
+                <input type="checkbox" role="switch" class="form-check-input" :checked="isPickPocketed(npc.id)"
+                       @change="markPickPocketed(npc.id, $event.target.checked)">
+            </td>
+            <td>{{npc.name}}</td>
+            <td>{{npc.location}}</td>
+            <td>{{npc.loot}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <button @click="reset()" type="button" class="btn btn-danger">Reset data</button>
 
 </div>
 <!-- partial -->
-  <script src='https://unpkg.com/vue@next'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/js/bootstrap.min.js'></script><script  src="./script.js"></script>
+<script src='https://unpkg.com/vue@next'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.2/js/bootstrap.min.js'></script>
+<script src="./data.js" type="module"></script>
+<script src="./bitset.js" type="module"></script>
+<script src="./state.js" type="module"></script>
+<script src="./script.js" type="module"></script>
 
 </body>
 </html>
