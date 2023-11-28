@@ -44,7 +44,6 @@ Vue.createApp({
             this.save();
         },
         save() {
-            console.log(this.filterPickpocketed);
             saveState(this.dexterity, this.chapter, this.filterPickpocketed, this.pickPocketState)
         }
     },
