@@ -1,45 +1,61 @@
 #app {
-  background-color: #fff;
-  padding: 20px;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 100px;
 }
 
 h3 {
-  text-align: center;
-  text-transform: uppercase;
-  font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 form {
-  display: block;
+    display: block;
 }
 
 .table td, th {
-  text-align: center;
+    text-align: center;
 }
 
 .table-nonfluid {
-  width: auto;
-  margin: 60px 0;
+    width: auto;
+    margin: 60px 0;
 }
 
 .center {
-  float: none;
-  margin-left: auto;
-  margin-right: auto;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 td.pickpocket-switch {
-  padding-left: 2.5rem;
+    padding-left: 2.5rem;
 }
 
 tr {
-  height: auto;
+    height: auto;
 }
 
 .fade-enter-active, .fade-leave-active {
-  transition: max-height 0.5s ease;
+    transition: max-height 0.5s ease;
 }
 
 .fade-enter-from, .fade-leave-to {
-  max-height: 0px;
+    max-height: 0px;
 }
+
+#npc-table td:nth-child(4), #npc-table tbody td:nth-child(3) {
+    font-size: 0.8rem;
+}
+
+/*@media (max-width: 768px) {*/
+/*  #npc-table tbody td:first-child {*/
+/*    font-size: 1.5rem;*/
+/*    padding-left: 4rem;*/
+/*  }*/
+
+/*  #npc-table tbody td:nth-child(4) {*/
+/*    font-size: 0.5rem;*/
+/*  }*/
+/*}*/

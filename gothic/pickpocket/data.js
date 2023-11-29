@@ -91,7 +91,7 @@ export const npcs = [
         "id": 12,
         "name": "Bromor",
         "dexterity": 50,
-        "loot": "Key to his room",
+        "loot": "Room key",
         "location": "City",
         "chapter": 1
     },
@@ -323,7 +323,7 @@ export const npcs = [
         "id": 41,
         "name": "Judge",
         "dexterity": 30,
-        "loot": "Key for hidden chest",
+        "loot": "Chest key",
         "location": "City",
         "chapter": 1
     },
@@ -523,7 +523,7 @@ export const npcs = [
         "id": 66,
         "name": "Salandril",
         "dexterity": 30,
-        "loot": "Key for hidden chest",
+        "loot": "Chest key",
         "location": "City",
         "chapter": 1
     },
@@ -563,7 +563,7 @@ export const npcs = [
         "id": 71,
         "name": "Valentino",
         "dexterity": 30,
-        "loot": "Key for hidden chest",
+        "loot": "Chest key",
         "location": "City",
         "chapter": 1
     },
@@ -620,7 +620,7 @@ export const npcs = [
         "name": "Dexter",
         "dexterity": 96,
         "loot": "370 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -628,7 +628,7 @@ export const npcs = [
         "name": "Dragomir",
         "dexterity": 47,
         "loot": "70 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -636,7 +636,7 @@ export const npcs = [
         "name": "Erol",
         "dexterity": 43,
         "loot": "42 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -644,7 +644,7 @@ export const npcs = [
         "name": "Gaan",
         "dexterity": 23,
         "loot": "35 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -652,7 +652,7 @@ export const npcs = [
         "name": "Grimbald",
         "dexterity": 85,
         "loot": "250 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -660,7 +660,7 @@ export const npcs = [
         "name": "Grom",
         "dexterity": 75,
         "loot": "40 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -668,7 +668,7 @@ export const npcs = [
         "name": "Lester",
         "dexterity": 76,
         "loot": "20 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -676,7 +676,7 @@ export const npcs = [
         "name": "Niclas",
         "dexterity": 27,
         "loot": "20 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -684,7 +684,7 @@ export const npcs = [
         "name": "Orlan",
         "dexterity": 89,
         "loot": "260 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -692,7 +692,7 @@ export const npcs = [
         "name": "Rukhar",
         "dexterity": 26,
         "loot": "30 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -700,7 +700,7 @@ export const npcs = [
         "name": "Sagitta",
         "dexterity": 103,
         "loot": "360 gold",
-        "location": "Land of Khorinis",
+        "location": "Khorinis Land",
         "chapter": 1
     },
     {
@@ -1147,7 +1147,7 @@ export const npcs = [
         "id": 144,
         "name": "Gorax",
         "dexterity": 80,
-        "loot": "Key for the treasure room",
+        "loot": "Treasury key",
         "location": "Monastery",
         "chapter": 1
     },
@@ -1163,7 +1163,7 @@ export const npcs = [
         "id": 146,
         "name": "Igaraz",
         "dexterity": 40,
-        "loot": "Key for his chest",
+        "loot": "Chest key",
         "location": "Monastery",
         "chapter": 1
     },
@@ -1779,7 +1779,7 @@ export const npcs = [
         "id": 223,
         "name": "Engor",
         "dexterity": 40,
-        "loot": "Map of Valley of Mines",
+        "loot": "Map of Valley",
         "location": "Castle",
         "chapter": 2
     },
@@ -1977,4 +1977,3 @@ export const npcs = [
     }
 ];
 
-export default npcs;

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gothic 2 Notr Pickpocket List</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css'>
     <link rel="stylesheet" href="./style.css">
@@ -54,13 +55,13 @@
         </thead>
         <tbody tag="tbody" is="vue:transition-group" name="fade">
         <tr v-for="(npc, index) in pickables" :key="npc.id">
-            <td class="form-switch pickpocket-switch">
+            <td class="form-switch pickpocket-switch" style="width: 10%">
                 <input type="checkbox" role="switch" class="form-check-input" :checked="isPickPocketed(npc.id)"
                        @change="markPickPocketed(npc.id, $event.target.checked)">
             </td>
-            <td>{{npc.name}}</td>
-            <td>{{npc.location}}</td>
-            <td>{{npc.loot}}</td>
+            <td style="width: 20%">{{npc.name}}</td>
+            <td style="width: 30%">{{npc.location}}</td>
+            <td style="width: 40%">{{npc.loot}}</td>
         </tr>
         </tbody>
     </table>
