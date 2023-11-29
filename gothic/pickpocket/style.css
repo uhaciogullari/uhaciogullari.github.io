@@ -45,17 +45,8 @@ tr {
     max-height: 0px;
 }
 
-#npc-table td:nth-child(4), #npc-table tbody td:nth-child(3) {
-    font-size: 0.8rem;
+@media (max-width: 768px) {
+    #npc-table td:nth-child(4), #npc-table tbody td:nth-child(3) {
+        font-size: 0.8rem;
+    }
 }
-
-/*@media (max-width: 768px) {*/
-/*  #npc-table tbody td:first-child {*/
-/*    font-size: 1.5rem;*/
-/*    padding-left: 4rem;*/
-/*  }*/
-
-/*  #npc-table tbody td:nth-child(4) {*/
-/*    font-size: 0.5rem;*/
-/*  }*/
-/*}*/
