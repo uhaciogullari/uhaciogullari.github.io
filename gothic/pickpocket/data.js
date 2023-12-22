@@ -1544,14 +1544,6 @@ export const npcs = [
         "chapter": 2
     },
     {
-        "id": 194,
-        "name": "Skinner",
-        "dexterity": 100,
-        "loot": "200 gold",
-        "location": "Bandit's Camp",
-        "chapter": 2
-    },
-    {
         "id": 195,
         "name": "Snaf",
         "dexterity": 49,
