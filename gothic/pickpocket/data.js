@@ -272,6 +272,14 @@ export const npcs = [
         "chapter": 1
     },
     {
+        "id": 248,
+        "name": "Harad",
+        "dexterity": 14,
+        "loot": "35 gold",
+        "location": "City",
+        "chapter": 1
+    },
+    {
         "id": 35,
         "name": "Ignaz",
         "dexterity": 38,
