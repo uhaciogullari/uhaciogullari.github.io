@@ -3,7 +3,7 @@ layout: default
 title: About
 ---
 
-I'm a software developer living in Amsterdam. Currently I am currently working on the internal developer platform in [Trendyol][2].
+I'm a software developer living in Amsterdam. Currently I am building platform and AI products in [Trendyol][2].
 
 You can also find me on [Stack Overflow][0] and [Github][1]. Contact me by email if you want to get in touch(I use Gmail and my address is my full name, like in the domain).
 
