@@ -265,8 +265,8 @@ testDatabase = new TestDatabaseBuilder().WithConfiguration(configuration).WithTe
 [2]: https://www.postgresql.org/docs/current/static/libpq-pgpass.html
 [3]: /assets/img/psql.png
 [4]: https://www.postgresql.org/docs/10/static/app-createuser.html
-[5]: https://xunit.github.io
-[6]: https://xunit.github.io/docs/shared-context.html#collection-fixture
+[5]: https://xunit.net
+[6]: https://xunit.net/docs/shared-context#collection-fixture
 [7]: https://github.com/uhaciogullari/doomed-databases
 [8]: /assets/img/create_drop_db.gif
 [9]: https://www.nuget.org/packages/Microsoft.Extensions.Configuration.Json
