@@ -9,4 +9,4 @@ You can also find me on [Stack Overflow][0] and [Github][1]. Contact me by email
 
 [0]: http://stackoverflow.com/users/205859/ufuk-haciogullari
 [1]: https://github.com/uhaciogullari
-[2]: https://www.trendyol.com/whoweare
+[2]: https://www.trendyol.com/en/s/meet-us
