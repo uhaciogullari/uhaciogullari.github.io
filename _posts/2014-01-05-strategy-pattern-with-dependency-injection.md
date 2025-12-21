@@ -3,6 +3,7 @@ layout: post
 title: "Strategy Pattern with Dependency Injection"
 date: 2014-01-05 23:08:22 +0200
 categories: [Design Patterns, Dependency Injection, C#]
+discussion_id: 6
 ---
 
 [Strategy pattern][1] is one of the most useful design patterns in OOP. It lets you select an algoritm's implementation at runtime. However most of the examples you will find online won't make sense if you are using dependency injection. Here's one of them:
