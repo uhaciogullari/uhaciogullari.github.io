@@ -51,8 +51,8 @@ const toGraphvizDot = (t, settings) => {
         const markMaxSuffix = settings.markMaxSuffix && t.maxSuffix == node;
         nodes.push(`${node.id} [label="${nodeLabel}"] ${isSpecialNode ? "[shape = doublecircle]" : ""} ${markMaxSuffix ? " [color=red]" : ""};`)
 
-        if(!isNodeHidden(node.link.id, settings) && !settings.hideSuffixLinks) {
-            edges.push(`${node.id} -> ${node.link.id} [color = steelblue] [constraint = false]; `)
+        if(!isNodeHidden(node.suffix.id, settings) && !settings.hideSuffixLinks) {
+            edges.push(`${node.id} -> ${node.suffix.id} [color = steelblue] [constraint = false]; `)
         }
 
         for (const [key, val] of node.edges) {
